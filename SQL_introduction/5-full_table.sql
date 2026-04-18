@@ -1,2 +1,2 @@
--- This script prints the description of the table first_table
-SHOW COLUMNS FROM first_table;
+-- This script prints the full CREATE statement of first_table
+SHOW CREATE TABLE first_table;
