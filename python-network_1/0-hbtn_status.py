@@ -16,11 +16,12 @@ def main():
     )
 
     with urllib.request.urlopen(req) as response:
-        body = response.read().decode('utf-8')
+        body = response.read()
 
         print("Body response:")
-        print("\t- type: {}".format(type(body)))
-        print("\t- content: {}".format(body))
+        print("type: {}".format(type(body)))
+        print("content: {}".format(body))
+        print("utf8 content: {}".format(body.decode('utf-8')))
 
 
 if __name__ == "__main__":
