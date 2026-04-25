@@ -79,16 +79,13 @@ def read_sql(product_id=None):
 # ---------------- ROUTE ----------------
 @app.route('/products')
 def products():
-    """Display products from JSON, CSV, or SQL based on source."""
-
     source = request.args.get("source")
     product_id = request.args.get("id")
 
     if product_id:
         product_id = int(product_id)
 
-    data = []
-
+    # ---------- SOURCE ----------
     if source == "json":
         data = read_json()
 
@@ -96,7 +93,7 @@ def products():
         data = read_csv()
 
     elif source == "sql":
-        data = read_sql(product_id)
+        data = read_sql()
 
     else:
         return render_template(
@@ -105,23 +102,20 @@ def products():
             products=[]
         )
 
-    # filter for JSON & CSV
-    if product_id and source != "sql":
+    # ---------- FILTER ----------
+    if product_id:
         data = [p for p in data if int(p["id"]) == product_id]
 
-        if not data:
-            return render_template(
-                "product_display.html",
-                error="Product not found",
-                products=[]
-            )
+    # 🔥 BURASI CRITICAL FIX
+    if product_id and len(data) == 0:
+        return render_template(
+            "product_display.html",
+            error="Product not found",
+            products=[]
+        )
 
     return render_template(
         "product_display.html",
         products=data,
         error=None
     )
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
